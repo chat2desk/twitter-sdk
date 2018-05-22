@@ -1,6 +1,6 @@
 defmodule TwitterApiClient.Config do
   def current_scope do
-    if Process.get(:_ex_twitter_oauth, nil), do: :process, else: :global
+    if Process.get(:_twitter_api_oauth, nil), do: :process, else: :global
   end
 
   @doc """
@@ -10,7 +10,7 @@ defmodule TwitterApiClient.Config do
   def get(:global) do
     Application.get_env(:twitter_api_client, :oauth, nil)
   end
-  def get(:process), do: Process.get(:_ex_twitter_oauth, nil)
+  def get(:process), do: Process.get(:_twitter_api_oauth, nil)
 
   @doc """
   Set OAuth configuration values.
@@ -18,7 +18,7 @@ defmodule TwitterApiClient.Config do
   def set(value), do: set(current_scope(), value)
   def set(:global, value), do: Application.put_env(:twitter_api_client, :oauth, value)
   def set(:process, value) do
-    Process.put(:_ex_twitter_oauth, value)
+    Process.put(:_twitter_api_oauth, value)
     :ok
   end
 
