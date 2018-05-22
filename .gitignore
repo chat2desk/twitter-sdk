@@ -6,4 +6,3 @@ erl_crash.dump
 /doc
 /bench/snapshots
 .env
-/.idea
