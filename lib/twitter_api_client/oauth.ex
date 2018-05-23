@@ -54,7 +54,7 @@ defmodule TwitterApiClient.OAuth do
     {header, req_params} = OAuther.header(params)
     Logger.info "START header - #{inspect header}"
     Logger.info "START req_params - #{inspect req_params}"
-    HTTPoison.post(url, Poison.encode!(params), headers)
+    HTTPoison.post(url, Poison.encode!(params), [{"Content-Type", "application/json"}, header])
 #    signed_params = get_signed_params(
 #      "post", url, Poison.encode!(params), consumer_key, consumer_secret, access_token, access_token_secret)
 #    Logger.info "SIGNED PARAMS - #{inspect signed_params}"
