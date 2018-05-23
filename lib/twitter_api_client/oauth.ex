@@ -47,7 +47,7 @@ defmodule TwitterApiClient.OAuth do
     Logger.info "oauth_post url - #{inspect url}"
     Logger.info "oauth_post signed_params - #{inspect Enum.into(signed_params, %{})}"
     Logger.info "oauth_post params - #{inspect params}"
-    Logger.info "oauth_post merged - #{inspect Map.merge(signed_params, params)}"
+    Logger.info "oauth_post merged - #{inspect Map.merge(Enum.into(signed_params, %{}), params)}"
     request = {to_charlist(url), [], 'application/json', signed_params}
 #    send_httpc_request(:post, request, options)
   end
