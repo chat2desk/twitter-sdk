@@ -49,7 +49,7 @@ defmodule TwitterApiClient.OAuth do
     )
     Logger.info "START PARAMS - #{inspect params}"
     Logger.info "START options - #{inspect options}"
-    {header, req_params} = params2 = OAuther.header("post", url, Poison.encode!(params), credentials)
+    {header, req_params} = OAuther.header("post", url, params, credentials)
     Logger.info "START header - #{inspect header}"
     Logger.info "START req_params - #{inspect req_params}"
 
