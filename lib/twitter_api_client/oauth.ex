@@ -45,13 +45,14 @@ defmodule TwitterApiClient.OAuth do
       "post", url, [], consumer_key, consumer_secret, access_token, access_token_secret)
     Logger.info "SIGNED PARAMS - #{inspect signed_params}"
     Logger.info "oauth_post url - #{inspect url}"
-    Logger.info "oauth_post signed_params - #{inspect Enum.into(signed_params, %{})}"
+#    Logger.info "oauth_post signed_params - #{inspect Enum.into(signed_params, %{})}"
     Logger.info "oauth_post params - #{inspect params}"
     headers = [{"Content-Type", "application/json"}]
     Logger.info "oauth_post headers - #{inspect headers}"
-    HTTPoison.post(url, Poison.encode!(params), headers, ["Authorization": signed_params])
-#    request = {to_charlist(url), [], 'application/json', signed_params}
-#    send_httpc_request(:post, request, options)
+    Logger.info "oauth_post headers - #{inspect Poison.encode!(params)}"
+#    HTTPoison.post(url, Poison.encode!(params), headers, ["Authorization": signed_params])
+    request = {to_charlist(url), [{"Authorization", signed_params}], "application/json", Poison.encode!(params)}
+    send_httpc_request(:post, request, options)
   end
 
   def oauth_post_old(url, params, consumer_key, consumer_secret, access_token, access_token_secret, options) do
