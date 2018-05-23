@@ -49,6 +49,8 @@ defmodule TwitterApiClient.OAuth do
     )
     Logger.info "START PARAMS - #{inspect params}"
     Logger.info "START options - #{inspect options}"
+    params = OAuther.sign("post", url, params, credentials)
+    Logger.info "START header - #{inspect params}"
     {header, req_params} = OAuther.header("post", url, params, credentials)
     Logger.info "START header - #{inspect header}"
     Logger.info "START req_params - #{inspect req_params}"
