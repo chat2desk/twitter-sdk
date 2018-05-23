@@ -40,7 +40,7 @@ defmodule TwitterApiClient.OAuth do
     send_httpc_request(:get, request, options)
   end
 
-  def oauth_post_n(url, params, consumer_key, consumer_secret, access_token, access_token_secret, options) do
+  def oauth_post(url, params, consumer_key, consumer_secret, access_token, access_token_secret, options) do
     credentials = OAuther.credentials(
       consumer_key: consumer_key,
       consumer_secret: consumer_secret,
@@ -71,7 +71,7 @@ defmodule TwitterApiClient.OAuth do
 #    send_httpc_request(:post, request, options)
   end
 
-  def oauth_post(url, params, consumer_key, consumer_secret, access_token, access_token_secret, options) do
+  def oauth_post_old(url, params, consumer_key, consumer_secret, access_token, access_token_secret, options) do
     Logger.info "POST CHECK params #{inspect params}"
     Logger.info "POST CHECK url #{inspect url}"
     signed_params = get_signed_params(
