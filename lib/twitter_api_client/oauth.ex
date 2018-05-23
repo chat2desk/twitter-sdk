@@ -41,6 +41,20 @@ defmodule TwitterApiClient.OAuth do
   end
 
   def oauth_post(url, params, consumer_key, consumer_secret, access_token, access_token_secret, options) do
+    credentials = OAuther.credentials(
+      consumer_key: consumer_key,
+      consumer_secret: consumer_secret,
+      token: access_token,
+      token_secret: access_token_secret
+    )
+    Logger.info "START PARAMS - #{inspect params}"
+    Logger.info "START options - #{inspect options}"
+    params1 = OAuther.sign(method, url, params, credentials)
+    Logger.info "START PARAMS1 - #{inspect options}"
+    params2 = OAuther.sign(method, url, Poison.encode!(params), credentials)
+    Logger.info "START PARAMS2 - #{inspect options}"
+
+    1/0
     signed_params = get_signed_params(
       "post", url, Poison.encode!(params), consumer_key, consumer_secret, access_token, access_token_secret)
     Logger.info "SIGNED PARAMS - #{inspect signed_params}"
