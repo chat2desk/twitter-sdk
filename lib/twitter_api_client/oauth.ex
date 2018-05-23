@@ -49,7 +49,7 @@ defmodule TwitterApiClient.OAuth do
     Logger.info "oauth_post params - #{inspect params}"
     {header, req_params} = OAuther.header(signed_params)
     Logger.info "oauth_post headerRRRR - #{inspect header}"
-    headers = ["Content-Type": "application/json", "Authorization": header]
+    headers = [{"Content-Type", "application/json"}, header]
     Logger.info "oauth_post headers - #{inspect headers}"
     Logger.info "oauth_post encode params - #{inspect Poison.encode!(params)}"
     HTTPoison.post(url, Poison.encode!(params), headers)
