@@ -49,9 +49,9 @@ defmodule TwitterApiClient.OAuth do
     Logger.info "oauth_post params - #{inspect params}"
     headers = [{"Content-Type", "application/json"}]
     Logger.info "oauth_post headers - #{inspect headers}"
-    Logger.info "oauth_post headers - #{inspect Poison.encode!(params)}"
+    Logger.info "oauth_post encode params - #{inspect Poison.encode!(params)}"
 #    HTTPoison.post(url, Poison.encode!(params), headers, ["Authorization": signed_params])
-    request = {to_charlist(url), [{"Authorization", signed_params}], "application/json", Poison.encode!(params)}
+    request = {to_charlist(url), ["Authorization": signed_params], "application/json", Poison.encode!(params)}
     send_httpc_request(:post, request, options)
   end
 
