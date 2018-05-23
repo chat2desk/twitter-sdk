@@ -42,7 +42,7 @@ defmodule TwitterApiClient.OAuth do
 
   def oauth_post(url, params, consumer_key, consumer_secret, access_token, access_token_secret, options) do
     signed_params = get_signed_params(
-      "post", url, [], consumer_key, consumer_secret, access_token, access_token_secret)
+      "post", url, Poison.encode!(params), consumer_key, consumer_secret, access_token, access_token_secret)
     Logger.info "SIGNED PARAMS - #{inspect signed_params}"
     Logger.info "oauth_post url - #{inspect url}"
 #    Logger.info "oauth_post signed_params - #{inspect Enum.into(signed_params, %{})}"
