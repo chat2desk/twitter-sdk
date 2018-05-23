@@ -49,9 +49,10 @@ defmodule TwitterApiClient.OAuth do
     )
     Logger.info "START PARAMS - #{inspect params}"
     Logger.info "START options - #{inspect options}"
-    params = OAuther.sign("post", url, params, credentials)
-    Logger.info "START params - #{inspect params}"
-    {header, req_params} = OAuther.header(params)
+    Logger.info "START params for sign - #{inspect [{Atom.to_string(List.first(Map.keys(params))), Poison.encode!(Map.get(params, List.first(Map.keys(params))))}]}"
+    signed_params = OAuther.sign("post", url, [{Atom.to_string(List.first(Map.keys(params))), Poison.encode!(Map.get(params, List.first(Map.keys(params))))}], credentials)
+    Logger.info "START params - #{inspect signed_params}"
+    {header, req_params} = OAuther.header(signed_params)
     Logger.info "START header - #{inspect header}"
     Logger.info "START req_params - #{inspect req_params}"
     HTTPoison.post(url, Poison.encode!(params), [{"Content-Type", "application/json"}, header])
