@@ -1,4 +1,5 @@
 defmodule TwitterApiClient.Parser do
+  require Logger
   @moduledoc """
   Provides parser logics for API results.
   """
@@ -107,6 +108,7 @@ defmodule TwitterApiClient.Parser do
   Parse request parameters for the API.
   """
   def parse_request_params(options) do
+    Logger.info "parse_request_params options #{inspect options}"
     Enum.map(options, fn
       {k, v} when is_list(v) -> {to_string(k), elements_to_string(v)}
       {k, v} -> {to_string(k), to_string(v)}
