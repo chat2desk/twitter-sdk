@@ -52,7 +52,7 @@ defmodule TwitterApiClient.OAuth do
     headers = ["Content-Type": "application/json", "Accept": "application/json"]
     try do
       response = HTTPoison.post(url, Poison.encode!(Map.merge(Enum.into(signed_params, %{}), params)), headers)
-      Logger.info "Answer from twitter #{inspect(request)}"
+      Logger.info "Answer from twitter #{inspect(response)}"
     rescue
       e -> Logger.error "Answer from twitter Error - #{inspect e}"
     end
