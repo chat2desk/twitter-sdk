@@ -85,7 +85,11 @@ defmodule TwitterApiClient.OAuth do
   end
 
   def send_httpc_request(method, request, options) do
-    :httpc.request(method, request, [{:autoredirect, false}] ++ proxy_option(), options)
+    try do
+      :httpc.request(method, request, [{:autoredirect, false}] ++ proxy_option(), options)
+    rescue
+       e -> Logger.error "REQUEST ERROR - #{inspect e}"
+    end
   end
 
   defp get_signed_params(method, url, params, consumer_key, consumer_secret, access_token, access_token_secret) do
