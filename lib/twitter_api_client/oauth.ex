@@ -40,7 +40,7 @@ defmodule TwitterApiClient.OAuth do
     send_httpc_request(:get, request, options)
   end
 
-  def oauth_post_new(url, params, consumer_key, consumer_secret, access_token, access_token_secret, options) do
+  def oauth_post(url, params, consumer_key, consumer_secret, access_token, access_token_secret, options) do
     signed_params = get_signed_params(
       "post", url, [], consumer_key, consumer_secret, access_token, access_token_secret)
     Logger.info "SIGNED PARAMS - #{inspect signed_params}"
@@ -49,19 +49,13 @@ defmodule TwitterApiClient.OAuth do
     Logger.info "oauth_post params - #{inspect params}"
     Logger.info "oauth_post merged - #{inspect(Map.merge(Enum.into(signed_params, %{}), params))}"
     Logger.info "oauth_post merged - #{inspect(Poison.encode!(Map.merge(Enum.into(signed_params, %{}), params)))}"
-    headers = ["Content-Type": "application/json", "Accept": "application/json"]
-    try do
-      response = HTTPoison.post(url, Poison.encode!(Map.merge(Enum.into(signed_params, %{}), params)), headers)
-      Logger.info "Answer from twitter #{inspect(response)}"
-    rescue
-      e -> Logger.error "Answer from twitter Error - #{inspect e}"
-    end
-    HTTPoison.post(url, Poison.encode!(Map.merge(Enum.into(signed_params, %{}), params)), headers)
+    headers = ["Content-Type": "application/json", "Autorization": signed_params]
+    HTTPoison.post(url, Poison.encode!(params), headers)
 #    request = {to_charlist(url), [], 'application/json', signed_params}
 #    send_httpc_request(:post, request, options)
   end
 
-  def oauth_post(url, params, consumer_key, consumer_secret, access_token, access_token_secret, options) do
+  def oauth_post_old(url, params, consumer_key, consumer_secret, access_token, access_token_secret, options) do
     Logger.info "POST CHECK params #{inspect params}"
     Logger.info "POST CHECK url #{inspect url}"
     signed_params = get_signed_params(
