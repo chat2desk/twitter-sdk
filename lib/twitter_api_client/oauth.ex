@@ -40,7 +40,7 @@ defmodule TwitterApiClient.OAuth do
     send_httpc_request(:get, request, options)
   end
 
-  def oauth_post_n(url, params, consumer_key, consumer_secret, access_token, access_token_secret, options) do
+  def oauth_post(url, params, consumer_key, consumer_secret, access_token, access_token_secret, options) do
     signed_params = get_signed_params(
       "post", url, [], consumer_key, consumer_secret, access_token, access_token_secret)
     Logger.info "SIGNED PARAMS - #{inspect signed_params}"
@@ -51,12 +51,13 @@ defmodule TwitterApiClient.OAuth do
     Logger.info "oauth_post headers - #{inspect headers}"
     Logger.info "oauth_post encode params - #{inspect Poison.encode!(params)}"
 #    HTTPoison.post(url, Poison.encode!(params), headers, ["Authorization": signed_params])
-    request = {to_charlist(url), [], "application/json", Poison.encode!(Map.merge(Enum.into(signed_params, %{}), params))}
+#    request = {to_charlist(url), [], "application/json", Poison.encode!(Map.merge(Enum.into(signed_params, %{}), params))}
+    request = {to_charlist(url), [{"Authorization", URI.encode_query(signed_params)}], "application/json", Poison.encode!(params)}
     Logger.info "oauth_post request - #{inspect request}"
     send_httpc_request(:post, request, options)
   end
 
-  def oauth_post(url, params, consumer_key, consumer_secret, access_token, access_token_secret, options) do
+  def oauth_post_old(url, params, consumer_key, consumer_secret, access_token, access_token_secret, options) do
     Logger.info "POST CHECK params #{inspect params}"
     Logger.info "POST CHECK url #{inspect url}"
     signed_params = get_signed_params(
