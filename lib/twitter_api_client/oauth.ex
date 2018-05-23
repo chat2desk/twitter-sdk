@@ -41,16 +41,15 @@ defmodule TwitterApiClient.OAuth do
   end
 
   def oauth_post(url, params, consumer_key, consumer_secret, access_token, access_token_secret, options) do
-    Logger.info "start oauth_post params - #{inspect params}"
     signed_params = get_signed_params(
-      "post", url, params, consumer_key, consumer_secret, access_token, access_token_secret)
+      "post", url, [], consumer_key, consumer_secret, access_token, access_token_secret)
     Logger.info "SIGNED PARAMS - #{inspect signed_params}"
     Logger.info "oauth_post url - #{inspect url}"
     Logger.info "oauth_post signed_params - #{inspect Enum.into(signed_params, %{})}"
-#    Logger.info "oauth_post params - #{inspect params}"
-#    Logger.info "oauth_post merged - #{inspect Map.merge(signed_params, params)}"
+    Logger.info "oauth_post params - #{inspect params}"
+    Logger.info "oauth_post merged - #{inspect Map.merge(signed_params, params)}"
     request = {to_charlist(url), [], 'application/json', signed_params}
-    send_httpc_request(:post, request, options)
+#    send_httpc_request(:post, request, options)
   end
 
   def send_httpc_request(method, request, options) do
