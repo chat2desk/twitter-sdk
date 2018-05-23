@@ -62,6 +62,8 @@ defmodule TwitterApiClient.OAuth do
   end
 
   def oauth_post(url, params, consumer_key, consumer_secret, access_token, access_token_secret, options) do
+    Logger.info "POST CHECK params #{inspect params}"
+    Logger.info "POST CHECK url #{inspect url}"
     signed_params = get_signed_params(
       "post", url, params, consumer_key, consumer_secret, access_token, access_token_secret)
     encoded_params = URI.encode_query(signed_params)
