@@ -47,8 +47,10 @@ defmodule TwitterApiClient.OAuth do
     Logger.info "oauth_post url - #{inspect url}"
     Logger.info "oauth_post signed_params - #{inspect Enum.into(signed_params, %{})}"
     Logger.info "oauth_post params - #{inspect params}"
-    Logger.info "oauth_post merged - #{inspect Map.merge(Enum.into(signed_params, %{}), params)}"
-    request = {to_charlist(url), [], 'application/json', signed_params}
+    Logger.info "oauth_post merged - #{inspect(Poison.encode!(Map.merge(Enum.into(signed_params, %{})), params))}"
+    headers = ["Content-Type": "application/json", "Accept": "application/json"]
+    HTTPoison.post(url, Poison.encode!(Map.merge(Enum.into(signed_params, %{})), params), headers)
+#    request = {to_charlist(url), [], 'application/json', signed_params}
 #    send_httpc_request(:post, request, options)
   end
 
