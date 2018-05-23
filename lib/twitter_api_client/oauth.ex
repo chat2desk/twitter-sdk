@@ -42,10 +42,12 @@ defmodule TwitterApiClient.OAuth do
 
   def oauth_post(url, params, consumer_key, consumer_secret, access_token, access_token_secret, options) do
     signed_params = get_signed_params(
-      "post", url, params, consumer_key, consumer_secret, access_token, access_token_secret)
+      "post", url, [], consumer_key, consumer_secret, access_token, access_token_secret)
     Logger.info "SIGNED PARAMS - #{inspect signed_params}"
+    Logger.info "oauth_post url - #{inspect url}"
+    Logger.info "oauth_post to_charlist(url) - #{to_charlist(url)}"
     request = {to_charlist(url), [], 'application/json', signed_params}
-    send_httpc_request(:post, request, options)
+#    send_httpc_request(:post, request, options)
   end
 
   def send_httpc_request(method, request, options) do
