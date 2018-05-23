@@ -49,10 +49,9 @@ defmodule TwitterApiClient.OAuth do
     )
     Logger.info "START PARAMS - #{inspect params}"
     Logger.info "START options - #{inspect options}"
-    params1 = OAuther.sign("post", url, params, credentials)
-    Logger.info "START PARAMS1 - #{inspect options}"
-    params2 = OAuther.sign("post", url, Poison.encode!(params), credentials)
-    Logger.info "START PARAMS2 - #{inspect options}"
+    {header, req_params} = params2 = OAuther.header("post", url, Poison.encode!(params), credentials)
+    Logger.info "START header - #{inspect header}"
+    Logger.info "START req_params - #{inspect req_params}"
 
     1/0
     signed_params = get_signed_params(
