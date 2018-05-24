@@ -53,8 +53,12 @@ defmodule TwitterApiClient.API.Base do
     Logger.info "upload_file_chunks chunk_size - #{inspect chunk_size}"
     stream = File.stream!(path, [], chunk_size)
     initial_segment_index = 0
+    Logger.info "upload_file_chunks stream - #{inspect stream}"
     Enum.reduce(stream, initial_segment_index, fn(chunk, seg_index) ->
+      Logger.info "upload_file_chunks start reduce chunk - #{inspect chunk}"
+      Logger.info "upload_file_chunks start reduce seg_index - #{inspect seg_index}"
       request_params = [command: "APPEND", media_id: media_id, media_data: Base.encode64(chunk), segment_index: seg_index]
+      Logger.info "upload_file_chunks after params request_params - #{inspect request_params}"
       do_request(:post, media_upload_url(), request_params)
       seg_index + 1
     end)
