@@ -1,4 +1,5 @@
 defmodule TwitterApiClient.API.Base do
+  require Logger
   @moduledoc """
   Provides basic and common functionalities for Twitter API.
   """
@@ -23,7 +24,12 @@ defmodule TwitterApiClient.API.Base do
   @doc """
   Upload media in chunks
   """
-  def upload_media(path, content_type, chunk_size \\ 65536) do
+  def upload_media(path, content_type, file_size \\ nil, chunk_size \\ 65536) do
+    Logger.info "upload_media path - #{inspect path}"
+    Logger.info "upload_media path - #{inspect content_type}"
+    Logger.info "upload_media path - #{inspect file_size}"
+    Logger.info "upload_media path - #{inspect chunk_size}"
+    1/0
     media_id = init_media_upload(path, content_type)
     upload_file_chunks(path, media_id, chunk_size)
     finalize_upload(media_id)
