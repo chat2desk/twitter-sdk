@@ -92,6 +92,20 @@ defmodule TwitterApiClient do
   @spec request(:get | :post, String.t, Keyword.t) :: Map
   defdelegate request(method, path, params), to: TwitterApiClient.API.Base
 
+
+  @doc """
+  Provides general twitter API access interface.
+
+  This method simply returns parsed json in Map structure.
+
+  ## Examples
+
+      TwitterApiClient.request(:get, "1.1/search/tweets.json", [q: "elixir", count: 1])
+
+  """
+  @spec request_json(:post, String.t, Keyword.t) :: Map
+  defdelegate request_json(method, path, params), to: TwitterApiClient.API.Base
+
   # -------------- Timelines -------------
 
   @doc """
