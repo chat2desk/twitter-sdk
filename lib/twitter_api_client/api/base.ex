@@ -42,11 +42,6 @@ defmodule TwitterApiClient.API.Base do
 
   def init_media_upload(path, content_type, file_size) do
     size = get_file_size(path, file_size)
-    Logger.info "init_media_upload path - #{inspect path}"
-    Logger.info "init_media_upload content_type - #{inspect content_type}"
-    Logger.info "init_media_upload file_size - #{inspect file_size}"
-    Logger.info "init_media_upload size - #{inspect size}"
-    1/0
     request_params = [command: "INIT", total_bytes: size, media_type: content_type]
     response = do_request(:post, media_upload_url(), request_params)
     response.media_id
