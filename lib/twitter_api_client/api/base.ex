@@ -18,7 +18,6 @@ defmodule TwitterApiClient.API.Base do
   Send request to the api.twitter.com server.
   """
   def request_json(method, path, params \\ []) do
-    Logger.info "request_json INSIDE"
     do_request_json(method, request_url(path), params)
   end
 
@@ -72,8 +71,9 @@ defmodule TwitterApiClient.API.Base do
   end
 
   defp do_request_json(method, url, params) do
+    Logger.info "do_request_json INSIDE"
     oauth = TwitterApiClient.Config.get_tuples |> verify_params
-    response = TwitterApiClient.OAuth.request(method, url, params,
+    response = TwitterApiClient.OAuth.request_json(method, url, params,
       oauth[:consumer_key], oauth[:consumer_secret], oauth[:access_token], oauth[:access_token_secret])
     Logger.info "do_request_json response - #{inspect response}"
     case response do
