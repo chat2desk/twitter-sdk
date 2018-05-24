@@ -64,13 +64,14 @@ defmodule TwitterApiClient.OAuth do
            {:ok, response} <- HTTPoison.post(url, request, headers),
            {:ok, data} <- Poison.decode(response.body) do
         cond do
+          data["errors"] -> {:error, List.first(data["errors"])["message"]}
           true ->
             Logger.info "RESPONSE - #{inspect data}"
             {:ok, data}
         end
       end
     rescue
-       e -> Logger.error "REQUEST AND HANDLE ERROR - #{inspect e}"
+       e -> Logger.error "TWITTER_API_CLIENT REQUEST_JSON ERROR WITH MESSAGE - #{inspect e}"
     end
   end
 
