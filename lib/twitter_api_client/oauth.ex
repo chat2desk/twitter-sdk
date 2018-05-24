@@ -52,11 +52,24 @@ defmodule TwitterApiClient.OAuth do
     headers = [{"Content-Type", "application/json"}, header]
     Logger.info "oauth_post headers - #{inspect headers}"
     Logger.info "oauth_post encode params - #{inspect Poison.encode!(params)}"
+    try do
+      with {:ok, request} <- Poison.encode(params),
+           {:ok, response} <- HTTPoison.post(url, request, headers),
+           {:ok, data} <- Poison.decode(response.body) do
+        cond do
+          true ->
+            Logger.info "RESPONSE - #{inspect data}"
+            {:ok, data}
+        end
+      end
+    rescue
+       e -> Logger.error "REQUEST AND HANDLE ERROR - #{inspect e}"
+    end
 #    HTTPoison.post(url, Poison.encode!(params), headers)
 #    request = {to_charlist(url), [], "application/json", Poison.encode!(Map.merge(Enum.into(signed_params, %{}), params))}
-    request = {to_charlist(url), [header], 'application/json', Poison.encode!(params)}
-    Logger.info "oauth_post request - #{inspect request}"
-    send_httpc_request(:post, request, options)
+#    request = {to_charlist(url), [header], 'application/json', Poison.encode!(params)}
+#    Logger.info "oauth_post request - #{inspect request}"
+#    send_httpc_request(:post, request, options)
   end
 
   def oauth_post_old(url, params, consumer_key, consumer_secret, access_token, access_token_secret, options) do
