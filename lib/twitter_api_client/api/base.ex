@@ -78,7 +78,7 @@ defmodule TwitterApiClient.API.Base do
     Logger.info "do_request_json response - #{inspect response}"
     case response do
       {:error, reason} -> raise(TwitterApiClient.ConnectionError, reason: reason)
-      r -> r |> parse_result
+      {:ok, data} -> {:ok, data}
     end
   end
 
