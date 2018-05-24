@@ -48,6 +48,9 @@ defmodule TwitterApiClient.API.Base do
   end
 
   def upload_file_chunks(path, media_id, chunk_size) do
+    Logger.info "upload_file_chunks path - #{inspect path}"
+    Logger.info "upload_file_chunks media_id - #{inspect media_id}"
+    Logger.info "upload_file_chunks chunk_size - #{inspect chunk_size}"
     stream = File.stream!(path, [], chunk_size)
     initial_segment_index = 0
     Enum.reduce(stream, initial_segment_index, fn(chunk, seg_index) ->
