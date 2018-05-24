@@ -1,4 +1,5 @@
 defmodule TwitterApiClient.OAuth do
+  require Logger
   @moduledoc """
   Provide a wrapper for :oauth request methods.
   """
