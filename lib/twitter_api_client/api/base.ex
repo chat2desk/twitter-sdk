@@ -1,5 +1,4 @@
 defmodule TwitterApiClient.API.Base do
-  require Logger
   @moduledoc """
   Provides basic and common functionalities for Twitter API.
   """
@@ -71,11 +70,9 @@ defmodule TwitterApiClient.API.Base do
   end
 
   defp do_request_json(method, url, params) do
-    Logger.info "do_request_json INSIDE"
     oauth = TwitterApiClient.Config.get_tuples |> verify_params
     response = TwitterApiClient.OAuth.request_json(method, url, params,
       oauth[:consumer_key], oauth[:consumer_secret], oauth[:access_token], oauth[:access_token_secret])
-    Logger.info "do_request_json response - #{inspect response}"
     case response do
       {:error, reason} -> raise(TwitterApiClient.ConnectionError, reason: reason)
       {:ok, data} -> {:ok, data}

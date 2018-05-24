@@ -1,5 +1,4 @@
 defmodule TwitterApiClient.OAuth do
-  require Logger
   @moduledoc """
   Provide a wrapper for :oauth request methods.
   """
@@ -50,15 +49,8 @@ defmodule TwitterApiClient.OAuth do
   def oauth_post_json(url, params, consumer_key, consumer_secret, access_token, access_token_secret, options) do
     signed_params = get_signed_params(
       "post", url, [], consumer_key, consumer_secret, access_token, access_token_secret)
-    Logger.info "SIGNED PARAMS - #{inspect signed_params}"
-    Logger.info "oauth_post url - #{inspect url}"
-#    Logger.info "oauth_post signed_params - #{inspect Enum.into(signed_params, %{})}"
-    Logger.info "oauth_post params - #{inspect params}"
     {header, req_params} = OAuther.header(signed_params)
-    Logger.info "oauth_post headerRRRR - #{inspect header}"
     headers = [{"Content-Type", "application/json"}, header]
-    Logger.info "oauth_post headers - #{inspect headers}"
-    Logger.info "oauth_post encode params - #{inspect Poison.encode!(params)}"
     try do
       with {:ok, request} <- Poison.encode(params),
            {:ok, response} <- HTTPoison.post(url, request, headers),
@@ -66,7 +58,6 @@ defmodule TwitterApiClient.OAuth do
         cond do
           data["errors"] -> {:error, List.first(data["errors"])["message"]}
           true ->
-            Logger.info "RESPONSE - #{inspect data}"
             {:ok, data}
         end
       end
