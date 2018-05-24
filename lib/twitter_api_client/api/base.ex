@@ -18,6 +18,7 @@ defmodule TwitterApiClient.API.Base do
   Send request to the api.twitter.com server.
   """
   def request_json(method, path, params \\ []) do
+    Logger.info "request_json INSIDE"
     do_request_json(method, request_url(path), params)
   end
 
