@@ -25,19 +25,28 @@ defmodule TwitterApiClient.API.Base do
   Upload media in chunks
   """
   def upload_media(path, content_type, file_size \\ nil, chunk_size \\ 65536) do
-    Logger.info "upload_media path - #{inspect path}"
-    Logger.info "upload_media path - #{inspect content_type}"
-    Logger.info "upload_media path - #{inspect file_size}"
-    Logger.info "upload_media path - #{inspect chunk_size}"
-    1/0
-    media_id = init_media_upload(path, content_type)
+    media_id = init_media_upload(path, content_type, file_size)
     upload_file_chunks(path, media_id, chunk_size)
     finalize_upload(media_id)
     media_id
   end
 
-  def init_media_upload(path, content_type) do
-    %{size: size} = File.stat! path
+  def get_file_size(path, file_size) do
+    cond do
+      file_size -> file_size
+      true ->
+        %{size: size} = File.stat! path
+        size
+    end
+  end
+
+  def init_media_upload(path, content_type, file_size) do
+    size = get_file_size(path, file_size)
+    Logger.info "init_media_upload path - #{inspect path}"
+    Logger.info "init_media_upload content_type - #{inspect content_type}"
+    Logger.info "init_media_upload file_size - #{inspect file_size}"
+    Logger.info "init_media_upload size - #{inspect size}"
+    1/0
     request_params = [command: "INIT", total_bytes: size, media_type: content_type]
     response = do_request(:post, media_upload_url(), request_params)
     response.media_id
