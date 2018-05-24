@@ -19,6 +19,13 @@ defmodule TwitterApiClient.OAuth do
   end
 
   @doc """
+  Send request with post method.
+  """
+  def request_json(:post, url, params, consumer_key, consumer_secret, access_token, access_token_secret) do
+    oauth_post_json(url, params, consumer_key, consumer_secret, access_token, access_token_secret, [])
+  end
+
+  @doc """
   Send async request with get method.
   """
   def request_async(:get, url, params, consumer_key, consumer_secret, access_token, access_token_secret) do
@@ -40,7 +47,7 @@ defmodule TwitterApiClient.OAuth do
     send_httpc_request(:get, request, options)
   end
 
-  def oauth_post(url, params, consumer_key, consumer_secret, access_token, access_token_secret, options) do
+  def oauth_post_json(url, params, consumer_key, consumer_secret, access_token, access_token_secret, options) do
     signed_params = get_signed_params(
       "post", url, [], consumer_key, consumer_secret, access_token, access_token_secret)
     Logger.info "SIGNED PARAMS - #{inspect signed_params}"
@@ -65,21 +72,12 @@ defmodule TwitterApiClient.OAuth do
     rescue
        e -> Logger.error "REQUEST AND HANDLE ERROR - #{inspect e}"
     end
-#    HTTPoison.post(url, Poison.encode!(params), headers)
-#    request = {to_charlist(url), [], "application/json", Poison.encode!(Map.merge(Enum.into(signed_params, %{}), params))}
-#    request = {to_charlist(url), [header], 'application/json', Poison.encode!(params)}
-#    Logger.info "oauth_post request - #{inspect request}"
-#    send_httpc_request(:post, request, options)
   end
 
-  def oauth_post_old(url, params, consumer_key, consumer_secret, access_token, access_token_secret, options) do
-    Logger.info "POST CHECK params #{inspect params}"
-    Logger.info "POST CHECK url #{inspect url}"
+  def oauth_post(url, params, consumer_key, consumer_secret, access_token, access_token_secret, options) do
     signed_params = get_signed_params(
       "post", url, params, consumer_key, consumer_secret, access_token, access_token_secret)
-    Logger.info "POST CHECK signed_params #{inspect signed_params}"
     encoded_params = URI.encode_query(signed_params)
-    Logger.info "POST CHECK encoded_params #{inspect encoded_params}"
     request = {to_charlist(url), [], 'application/x-www-form-urlencoded', encoded_params}
     send_httpc_request(:post, request, options)
   end

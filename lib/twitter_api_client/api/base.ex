@@ -1,4 +1,5 @@
 defmodule TwitterApiClient.API.Base do
+  require Logger
   @moduledoc """
   Provides basic and common functionalities for Twitter API.
   """
@@ -11,6 +12,13 @@ defmodule TwitterApiClient.API.Base do
   """
   def request(method, path, params \\ []) do
     do_request(method, request_url(path), params)
+  end
+
+  @doc """
+  Send request to the api.twitter.com server.
+  """
+  def request_json(method, path, params \\ []) do
+    do_request_json(method, request_url(path), params)
   end
 
   @doc """
@@ -56,6 +64,17 @@ defmodule TwitterApiClient.API.Base do
     oauth = TwitterApiClient.Config.get_tuples |> verify_params
     response = TwitterApiClient.OAuth.request(method, url, params,
       oauth[:consumer_key], oauth[:consumer_secret], oauth[:access_token], oauth[:access_token_secret])
+    case response do
+      {:error, reason} -> raise(TwitterApiClient.ConnectionError, reason: reason)
+      r -> r |> parse_result
+    end
+  end
+
+  defp do_request_json(method, url, params) do
+    oauth = TwitterApiClient.Config.get_tuples |> verify_params
+    response = TwitterApiClient.OAuth.request(method, url, params,
+      oauth[:consumer_key], oauth[:consumer_secret], oauth[:access_token], oauth[:access_token_secret])
+    Logger.info "do_request_json response - #{inspect response}"
     case response do
       {:error, reason} -> raise(TwitterApiClient.ConnectionError, reason: reason)
       r -> r |> parse_result
