@@ -57,6 +57,12 @@ defmodule TwitterApiClient.API.Base do
     size = get_file_size(path, file_size)
     Logger.info "init_media_upload headers - #{inspect file_size}"
     Logger.info "init_media_upload headers - #{inspect size}"
+    stream = File.stream!(path, [], 65536)
+    initial_segment_index = 0
+    Enum.reduce(stream, initial_segment_index, fn(chunk, seg_index) ->
+      request_params = [command: "APPEND", media_id: media_id, media_data: Base.encode64(chunk), segment_index: seg_index]
+      seg_index + 1
+    end)
     1/0
     request_params = [command: "INIT", total_bytes: size, media_type: content_type]
     response = do_request(:post, media_upload_url(), request_params)
@@ -64,17 +70,10 @@ defmodule TwitterApiClient.API.Base do
   end
 
   def upload_file_chunks(path, media_id, chunk_size) do
-    Logger.info "upload_file_chunks path - #{inspect path}"
-    Logger.info "upload_file_chunks media_id - #{inspect media_id}"
-    Logger.info "upload_file_chunks chunk_size - #{inspect chunk_size}"
     stream = File.stream!(path, [], chunk_size)
     initial_segment_index = 0
-    Logger.info "upload_file_chunks stream - #{inspect stream}"
     Enum.reduce(stream, initial_segment_index, fn(chunk, seg_index) ->
-      Logger.info "upload_file_chunks start reduce chunk - #{inspect chunk}"
-      Logger.info "upload_file_chunks start reduce seg_index - #{inspect seg_index}"
       request_params = [command: "APPEND", media_id: media_id, media_data: Base.encode64(chunk), segment_index: seg_index]
-      Logger.info "upload_file_chunks after params request_params - #{inspect request_params}"
       do_request(:post, media_upload_url(), request_params)
       seg_index + 1
     end)
