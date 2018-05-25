@@ -60,7 +60,7 @@ defmodule TwitterApiClient.API.Base do
     stream = File.stream!(path, [], 65536)
     initial_segment_index = 0
     Enum.reduce(stream, initial_segment_index, fn(chunk, seg_index) ->
-      request_params = [command: "APPEND", media_id: media_id, media_data: Base.encode64(chunk), segment_index: seg_index]
+      request_params = [command: "APPEND", media_id: 11111, media_data: Base.encode64(chunk), segment_index: seg_index]
       seg_index + 1
     end)
     1/0
