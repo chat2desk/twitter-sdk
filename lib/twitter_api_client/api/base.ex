@@ -167,6 +167,9 @@ defmodule TwitterApiClient.API.Base do
 
   def parse_result(result) do
     {:ok, {_response, header, body}} = result
+    Logger.info "parse_result _response - #{inspect _response}"
+    Logger.info "parse_result header - #{inspect header}"
+    Logger.info "parse_result body - #{inspect body}"
     verify_response(TwitterApiClient.JSON.decode!(body), header)
   end
 
