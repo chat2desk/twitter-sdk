@@ -1,4 +1,5 @@
 defmodule TwitterApiClient.API.Base do
+  use ExtendedHttpPoison
   require Logger
   @moduledoc """
   Provides basic and common functionalities for Twitter API.
@@ -24,8 +25,21 @@ defmodule TwitterApiClient.API.Base do
   @doc """
   Upload media in chunks
   """
-  def upload_media(path, content_type, file_size \\ nil, chunk_size \\ 65536) do
-    media_id = init_media_upload(path, content_type, file_size)
+  def upload_media(path, content_type, chunk_size \\ 65536) do
+    media_id = init_media_upload(path, content_type)
+    upload_file_chunks(path, media_id, chunk_size)
+    finalize_upload(media_id)
+    media_id
+  end
+
+  @doc """
+  Upload media in chunks
+  """
+  def upload_media_by_link(path) do
+    Logger.info "upload_media_by_link path - #{inspect path}"
+    %HTTPoison.Response{headers: headers} = head!(payload[:event][:message_create][:message_data][:attachment], [])
+    Logger.info "upload_media_by_link headers - #{inspect headers}"
+    media_id = init_media_upload(path, headers["Content-Type"], headers["Content-Length"])
     upload_file_chunks(path, media_id, chunk_size)
     finalize_upload(media_id)
     media_id
@@ -40,8 +54,11 @@ defmodule TwitterApiClient.API.Base do
     end
   end
 
-  def init_media_upload(path, content_type, file_size) do
+  def init_media_upload(path, content_type, file_size \\ nil) do
     size = get_file_size(path, file_size)
+    Logger.info "init_media_upload headers - #{inspect file_size}"
+    Logger.info "init_media_upload headers - #{inspect size}"
+    1/0
     request_params = [command: "INIT", total_bytes: size, media_type: content_type]
     response = do_request(:post, media_upload_url(), request_params)
     response.media_id
