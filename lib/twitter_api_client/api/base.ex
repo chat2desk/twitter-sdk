@@ -39,8 +39,8 @@ defmodule TwitterApiClient.API.Base do
     Logger.info "upload_media_by_link content_type - #{inspect content_type}"
     Logger.info "upload_media_by_link file_size - #{inspect file_size}"
     media_id = init_media_upload(path, content_type, file_size)
-    upload_file_chunks(path, media_id, chunk_size)
-    finalize_upload(media_id)
+#    upload_file_chunks(path, media_id, chunk_size)
+#    finalize_upload(media_id)
     media_id
   end
 
