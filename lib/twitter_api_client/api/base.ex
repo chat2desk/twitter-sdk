@@ -120,7 +120,7 @@ defmodule TwitterApiClient.API.Base do
     oauth = TwitterApiClient.Config.get_tuples |> verify_params
     response = TwitterApiClient.OAuth.request(method, url, params,
       oauth[:consumer_key], oauth[:consumer_secret], oauth[:access_token], oauth[:access_token_secret])
-    Logger.info "do_request response - #{inpect response}"
+    Logger.info "do_request response - #{inspect response}"
     case response do
       {:error, reason} -> raise(TwitterApiClient.ConnectionError, reason: reason)
       r -> r |> parse_result
