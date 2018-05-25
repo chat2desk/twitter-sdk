@@ -1,5 +1,4 @@
 defmodule TwitterApiClient.API.Base do
-  require Logger
   @moduledoc """
   Provides basic and common functionalities for Twitter API.
   """
@@ -35,13 +34,9 @@ defmodule TwitterApiClient.API.Base do
   Upload media in chunks
   """
   def upload_media_by_link(path, content_type, file_size) do
-    Logger.info "upload_media_by_link path - #{inspect path}"
-    Logger.info "upload_media_by_link content_type - #{inspect content_type}"
-    Logger.info "upload_media_by_link file_size - #{inspect file_size}"
     media_id = init_media_upload(path, content_type, file_size)
     upload_file_chunks_by_link(path, media_id)
     finalize_upload(media_id)
-    Logger.info "after finalized - #{inspect media_id}"
     media_id
   end
 
@@ -62,10 +57,7 @@ defmodule TwitterApiClient.API.Base do
   end
 
   def upload_file_chunks_by_link(path, media_id) do
-    Logger.info "upload_file_chunks_by_link PATH - #{inspect path}"
-    Logger.info "upload_file_chunks_by_link media_id - #{inspect media_id}"
     %HTTPoison.AsyncResponse{id: id} = HTTPoison.get! path, %{}, stream_to: self
-    Logger.info "upload_file_chunks_by_link id - #{inspect id}"
     process_httpoison_chunks(id, media_id, 0)
   end
 
@@ -78,10 +70,6 @@ defmodule TwitterApiClient.API.Base do
         # TODO handle headers
         process_httpoison_chunks(id, media_id, segment_index)
       %HTTPoison.AsyncChunk{id: ^id, chunk: chunk_data} ->
-        Logger.info "process_httpoison_chunks id - #{inspect id}"
-        Logger.info "process_httpoison_chunks media_id - #{inspect media_id}"
-        Logger.info "process_httpoison_chunks segment_index - #{inspect segment_index}"
-        Logger.info "process_httpoison_chunks chunk_data - #{inspect chunk_data}"
         request_params = [command: "APPEND", media_id: media_id, media_data: Base.encode64(chunk_data), segment_index: segment_index]
         do_request(:post, media_upload_url(), request_params)
         process_httpoison_chunks(id, media_id, segment_index + 1)
@@ -94,17 +82,13 @@ defmodule TwitterApiClient.API.Base do
     stream = File.stream!(path, [], chunk_size)
     initial_segment_index = 0
     Enum.reduce(stream, initial_segment_index, fn(chunk, seg_index) ->
-      Logger.info "upload_file_chunks chunk #{inspect chunk}"
-      Logger.info "upload_file_chunks encode64 #{inspect Base.encode64(chunk)}"
       request_params = [command: "APPEND", media_id: media_id, media_data: Base.encode64(chunk), segment_index: seg_index]
       do_request(:post, media_upload_url(), request_params)
-      Logger.info "upload_file_chunks AFTER SEND}"
       seg_index + 1
     end)
   end
 
   def finalize_upload(media_id) do
-    Logger.info "finalize_upload media_id - #{inspect media_id}"
     request_params = [command: "FINALIZE", media_id: media_id]
     do_request(:post, media_upload_url(), request_params)
   end
@@ -120,7 +104,6 @@ defmodule TwitterApiClient.API.Base do
     oauth = TwitterApiClient.Config.get_tuples |> verify_params
     response = TwitterApiClient.OAuth.request(method, url, params,
       oauth[:consumer_key], oauth[:consumer_secret], oauth[:access_token], oauth[:access_token_secret])
-    Logger.info "do_request response - #{inspect response}"
     case response do
       {:error, reason} -> raise(TwitterApiClient.ConnectionError, reason: reason)
       r -> r |> parse_result
@@ -167,11 +150,6 @@ defmodule TwitterApiClient.API.Base do
 
   def parse_result(result) do
     {:ok, {_response, header, body}} = result
-    Logger.info "parse_result _response - #{inspect _response}"
-    Logger.info "parse_result header - #{inspect header}"
-    Logger.info "parse_result body - #{inspect body}"
-    Logger.info "parse_result is_list(body) - #{inspect is_list(body)}"
-    Logger.info "parse_result is_binary(body) - #{inspect is_binary(body)}"
     verify_response(body |> try_handle_body(), header)
   end
 
