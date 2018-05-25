@@ -172,7 +172,15 @@ defmodule TwitterApiClient.API.Base do
     Logger.info "parse_result body - #{inspect body}"
     Logger.info "parse_result is_list(body) - #{inspect is_list(body)}"
     Logger.info "parse_result is_binary(body) - #{inspect is_binary(body)}"
-    verify_response((if (is_list(body)), do: body, else: TwitterApiClient.JSON.decode!(body)), header)
+    verify_response(body |> try_handle_body(), header)
+  end
+
+  def try_handle_body(body) do
+    try do
+      TwitterApiClient.JSON.decode!(body)
+    rescue
+       -> body
+    end
   end
 
   defp verify_response(body, header) do
