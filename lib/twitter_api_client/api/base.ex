@@ -1,5 +1,4 @@
 defmodule TwitterApiClient.API.Base do
-  use ExtendedHttpPoison
   require Logger
   @moduledoc """
   Provides basic and common functionalities for Twitter API.
