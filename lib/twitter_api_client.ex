@@ -411,10 +411,10 @@ defmodule TwitterApiClient do
   defdelegate upload_media(path, content_type), to: TwitterApiClient.API.Base
 
   @spec upload_media(String.t, String.t, integer()) :: integer()
-  defdelegate upload_media(path, content_type, file_size), to: TwitterApiClient.API.Base
+  defdelegate upload_media(path, content_type, chunk_size), to: TwitterApiClient.API.Base
 
-  @spec upload_media_by_link(String.t) :: integer()
-  defdelegate upload_media_by_link(path), to: TwitterApiClient.API.Base
+  @spec upload_media_by_link(String.t, String.t, integer()) :: integer()
+  defdelegate upload_media_by_link(path, content_type, file_size), to: TwitterApiClient.API.Base
 
   @doc """
   GET statuses/retweeters/ids
