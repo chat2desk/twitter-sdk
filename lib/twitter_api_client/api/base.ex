@@ -41,6 +41,7 @@ defmodule TwitterApiClient.API.Base do
     media_id = init_media_upload(path, content_type, file_size)
     upload_file_chunks_by_link(path, media_id)
     finalize_upload(media_id)
+    Logger.info "after finalized - #{inspect media_id}"
     media_id
   end
 
@@ -102,6 +103,7 @@ defmodule TwitterApiClient.API.Base do
   end
 
   def finalize_upload(media_id) do
+    Logger.info "finalize_upload media_id - #{inspect media_id}"
     request_params = [command: "FINALIZE", media_id: media_id]
     do_request(:post, media_upload_url(), request_params)
   end
