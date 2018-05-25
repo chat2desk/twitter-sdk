@@ -68,7 +68,7 @@ defmodule TwitterApiClient.API.Base do
     process_httpoison_chunks(id, 0)
   end
 
-  def process_httpoison_chunks(id, segment_index) do
+  def process_httpoison_chunks(id, media_id, segment_index) do
     receive do
       %HTTPoison.AsyncStatus{id: ^id} ->
         # TODO handle status
@@ -78,6 +78,7 @@ defmodule TwitterApiClient.API.Base do
         process_httpoison_chunks(id, segment_index)
       %HTTPoison.AsyncChunk{id: ^id, chunk: chunk_data} ->
         Logger.info "process_httpoison_chunks id - #{inspect id}"
+        Logger.info "process_httpoison_chunks media_id - #{inspect media_id}"
         Logger.info "process_httpoison_chunks segment_index - #{inspect segment_index}"
         Logger.info "process_httpoison_chunks chunk_data - #{inspect chunk_data}"
         request_params = [command: "APPEND", media_id: media_id, media_data: Base.encode64(chunk_data), segment_index: seg_index]
