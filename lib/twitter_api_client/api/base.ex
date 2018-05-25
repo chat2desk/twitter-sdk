@@ -1,4 +1,5 @@
 defmodule TwitterApiClient.API.Base do
+  use HTTPoison.Response
   require Logger
   @moduledoc """
   Provides basic and common functionalities for Twitter API.
