@@ -98,6 +98,7 @@ defmodule TwitterApiClient.API.Base do
       Logger.info "upload_file_chunks encode64 #{inspect Base.encode64(chunk)}"
       request_params = [command: "APPEND", media_id: media_id, media_data: Base.encode64(chunk), segment_index: seg_index]
       do_request(:post, media_upload_url(), request_params)
+      Logger.info "upload_file_chunks AFTER SEND}"
       seg_index + 1
     end)
   end
