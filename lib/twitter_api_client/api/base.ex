@@ -179,7 +179,7 @@ defmodule TwitterApiClient.API.Base do
     try do
       TwitterApiClient.JSON.decode!(body)
     rescue
-       -> body
+      e -> body
     end
   end
 
