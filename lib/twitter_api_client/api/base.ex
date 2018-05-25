@@ -63,7 +63,7 @@ defmodule TwitterApiClient.API.Base do
   def upload_file_chunks_by_link(path, media_id) do
     Logger.info "upload_file_chunks_by_link PATH - #{inspect path}"
     Logger.info "upload_file_chunks_by_link media_id - #{inspect media_id}"
-    %HTTPoison.AsyncResponse{id: id} = HTTPoison.get! payload[:event][:message_create][:message_data][:attachment], %{}, stream_to: self
+    %HTTPoison.AsyncResponse{id: id} = HTTPoison.get! path, %{}, stream_to: self
     Logger.info "upload_file_chunks_by_link id - #{inspect id}"
     process_httpoison_chunks(id, 0)
   end
