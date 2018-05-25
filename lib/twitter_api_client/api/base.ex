@@ -39,8 +39,8 @@ defmodule TwitterApiClient.API.Base do
     Logger.info "upload_media_by_link content_type - #{inspect content_type}"
     Logger.info "upload_media_by_link file_size - #{inspect file_size}"
     media_id = init_media_upload(path, content_type, file_size)
-#    upload_file_chunks(path, media_id, chunk_size)
-#    finalize_upload(media_id)
+    upload_file_chunks_by_link(path, media_id)
+    finalize_upload(media_id)
     media_id
   end
 
@@ -55,18 +55,37 @@ defmodule TwitterApiClient.API.Base do
 
   def init_media_upload(path, content_type, file_size \\ nil) do
     size = get_file_size(path, file_size)
-    Logger.info "init_media_upload headers - #{inspect file_size}"
-    Logger.info "init_media_upload headers - #{inspect size}"
-    stream = File.stream!(path, [], 65536)
-    initial_segment_index = 0
-    Enum.reduce(stream, initial_segment_index, fn(chunk, seg_index) ->
-      request_params = [command: "APPEND", media_id: 11111, media_data: Base.encode64(chunk), segment_index: seg_index]
-      seg_index + 1
-    end)
-    1/0
     request_params = [command: "INIT", total_bytes: size, media_type: content_type]
     response = do_request(:post, media_upload_url(), request_params)
     response.media_id
+  end
+
+  def upload_file_chunks_by_link(path, media_id) do
+    Logger.info "upload_file_chunks_by_link PATH - #{inspect path}"
+    Logger.info "upload_file_chunks_by_link media_id - #{inspect media_id}"
+    %HTTPoison.AsyncResponse{id: id} = HTTPoison.get! payload[:event][:message_create][:message_data][:attachment], %{}, stream_to: self
+    Logger.info "upload_file_chunks_by_link id - #{inspect id}"
+    process_httpoison_chunks(id, 0)
+  end
+
+  def process_httpoison_chunks(id, segment_index) do
+    receive do
+      %HTTPoison.AsyncStatus{id: ^id} ->
+        # TODO handle status
+        process_httpoison_chunks(id, segment_index)
+      %HTTPoison.AsyncHeaders{id: ^id, headers: %{"Connection" => "keep-alive"}} ->
+        # TODO handle headers
+        process_httpoison_chunks(id, segment_index)
+      %HTTPoison.AsyncChunk{id: ^id, chunk: chunk_data} ->
+        Logger.info "process_httpoison_chunks id - #{inspect id}"
+        Logger.info "process_httpoison_chunks segment_index - #{inspect segment_index}"
+        Logger.info "process_httpoison_chunks chunk_data - #{inspect chunk_data}"
+        request_params = [command: "APPEND", media_id: media_id, media_data: Base.encode64(chunk_data), segment_index: seg_index]
+        do_request(:post, media_upload_url(), request_params)
+        process_httpoison_chunks(id, segment_index + 1)
+      %HTTPoison.AsyncEnd{id: ^id} ->
+        {:ok}
+    end
   end
 
   def upload_file_chunks(path, media_id, chunk_size) do
