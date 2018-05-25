@@ -39,7 +39,7 @@ defmodule TwitterApiClient.API.Base do
     Logger.info "upload_media_by_link content_type - #{inspect content_type}"
     Logger.info "upload_media_by_link file_size - #{inspect file_size}"
     media_id = init_media_upload(path, content_type, file_size)
-    upload_file_chunks_by_link(path, media_id, 0)
+    upload_file_chunks_by_link(path, media_id)
     finalize_upload(media_id)
     media_id
   end
@@ -65,7 +65,7 @@ defmodule TwitterApiClient.API.Base do
     Logger.info "upload_file_chunks_by_link media_id - #{inspect media_id}"
     %HTTPoison.AsyncResponse{id: id} = HTTPoison.get! path, %{}, stream_to: self
     Logger.info "upload_file_chunks_by_link id - #{inspect id}"
-    process_httpoison_chunks(id, 0)
+    process_httpoison_chunks(id, media_id, 0)
   end
 
   def process_httpoison_chunks(id, media_id, segment_index) do
