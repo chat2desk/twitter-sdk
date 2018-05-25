@@ -81,7 +81,7 @@ defmodule TwitterApiClient.API.Base do
         Logger.info "process_httpoison_chunks media_id - #{inspect media_id}"
         Logger.info "process_httpoison_chunks segment_index - #{inspect segment_index}"
         Logger.info "process_httpoison_chunks chunk_data - #{inspect chunk_data}"
-        request_params = [command: "APPEND", media_id: media_id, media_data: Base.encode64(chunk_data), segment_index: seg_index]
+        request_params = [command: "APPEND", media_id: media_id, media_data: Base.encode64(chunk_data), segment_index: segment_index]
         do_request(:post, media_upload_url(), request_params)
         process_httpoison_chunks(id, media_id, segment_index + 1)
       %HTTPoison.AsyncEnd{id: ^id} ->
