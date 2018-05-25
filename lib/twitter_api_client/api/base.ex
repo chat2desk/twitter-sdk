@@ -170,6 +170,7 @@ defmodule TwitterApiClient.API.Base do
     Logger.info "parse_result _response - #{inspect _response}"
     Logger.info "parse_result header - #{inspect header}"
     Logger.info "parse_result body - #{inspect body}"
+    Logger.info "parse_result TwitterApiClient.JSON.decode!(body) - #{inspect TwitterApiClient.JSON.decode!(body)}"
     verify_response(TwitterApiClient.JSON.decode!(body), header)
   end
 
