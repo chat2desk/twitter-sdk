@@ -963,8 +963,8 @@ defmodule TwitterApiClient do
   ## Reference
   https://api.twitter.com/oauth2/token
   """
-  @spec oauth2_token :: TwitterApiClient.Model.Oauth2.t
-  defdelegate token, to: TwitterApiClient.API.Oauth2
+  @spec oauth2_token :: TwitterApiClient.Model.User.t
+  defdelegate oauth2_token, to: TwitterApiClient.API.Oauth2
 
   # POST account/settings
   # https://dev.twitter.com/rest/reference/post/account/settings
