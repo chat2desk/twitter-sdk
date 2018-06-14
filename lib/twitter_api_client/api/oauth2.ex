@@ -5,6 +5,8 @@ defmodule TwitterApiClient.API.Oauth2 do
 
   import TwitterApiClient.API.Base
 
+  require Logger
+
   def token do
     oauth = TwitterApiClient.Config.get_tuples |> verify_params
     auth = Base.encode64("#{URI.encode_www_form(oauth[:consumer_key])}:#{URI.encode_www_form(oauth[:consumer_secret])}")
