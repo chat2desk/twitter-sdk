@@ -953,6 +953,18 @@ defmodule TwitterApiClient do
   @spec verify_credentials(Keyword.t) :: TwitterApiClient.Model.User.t
   defdelegate verify_credentials(options), to: TwitterApiClient.API.Users
 
+  @doc """
+  GET oauth2/token
+
+  ## Examples
+
+      TwitterApiClient.oauth2_token
+
+  ## Reference
+  https://api.twitter.com/oauth2/token
+  """
+  @spec oauth2_token :: TwitterApiClient.Model.Oauth2.t
+  defdelegate token, to: TwitterApiClient.API.Oauth2
 
   # POST account/settings
   # https://dev.twitter.com/rest/reference/post/account/settings

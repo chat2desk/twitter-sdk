@@ -53,6 +53,18 @@ defmodule TwitterApiClient.Model.User do
   @type t :: %__MODULE__{}
 end
 
+defmodule TwitterApiClient.Model.Oauth2 do
+  @moduledoc """
+  User object.
+
+  ## Reference
+  https://developer.twitter.com/en/docs/basics/authentication/overview/application-only
+  """
+  defstruct token_type: nil, access_token: nil
+
+  @type t :: %__MODULE__{}
+end
+
 defmodule TwitterApiClient.Model.ProfileBanner do
   @moduledoc """
   Profile Banner object.

@@ -1,4 +1,2 @@
 # TwitterApiClient
 
-Fork library exTwitter
-
