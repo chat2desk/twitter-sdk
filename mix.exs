@@ -41,7 +41,8 @@ defmodule TwitterApiClient.Mixfile do
       {:mock, "~> 0.2", only: [:dev, :test]},
       {:ex_doc, ">= 0.0.0", only: [:dev, :docs]},
       {:inch_ex, "~> 0.5", only: :docs},
-      {:benchfella, "~> 0.3.3", only: :dev}
+      {:benchfella, "~> 0.3.3", only: :dev},
+      {:httpoison, "~> 1.8"}
     ]
   end
 
