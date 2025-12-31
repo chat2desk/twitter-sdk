@@ -57,7 +57,7 @@ defmodule TwitterApiClient.API.Base do
   end
 
   def upload_file_chunks_by_link(path, media_id) do
-    %HTTPoison.AsyncResponse{id: id} = HTTPoison.get! path, %{}, stream_to: self
+    %HTTPoison.AsyncResponse{id: id} = HTTPoison.get! path, %{}, stream_to: self()
     process_httpoison_chunks(id, media_id, 0)
   end
 
